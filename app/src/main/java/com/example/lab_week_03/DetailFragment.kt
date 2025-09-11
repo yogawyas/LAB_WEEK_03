@@ -7,24 +7,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 class DetailFragment : Fragment() {
-    private var param1: String? = null
-    private var param2: String? = null
-    private val coffeeTitle: TextView?
-        get() = view?.findViewById(R.id.coffee_title)
-    private val coffeeDesc: TextView?
-        get() = view?.findViewById(R.id.coffee_desc)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    companion object {
+        private const val COFFEE_ID = "COFFEE_ID"
+        fun newInstance(coffeeId: Int) =
+            DetailFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(COFFEE_ID, coffeeId)
+                }
+            }
     }
+
+    private var coffeeTitle: TextView? = null
+    private var coffeeDesc: TextView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,10 +31,15 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // bind views
+        coffeeTitle = view.findViewById(R.id.coffee_title)
+        coffeeDesc = view.findViewById(R.id.coffee_desc)
+
         val coffeeId = arguments?.getInt(COFFEE_ID, 0) ?: 0
         setCoffeeData(coffeeId)
     }
-    fun setCoffeeData(id: Int) {
+
+    private fun setCoffeeData(id: Int) {
         when (id) {
             R.id.affogato -> {
                 coffeeTitle?.text = getString(R.string.affogato_title)
@@ -52,17 +53,17 @@ class DetailFragment : Fragment() {
                 coffeeTitle?.text = getString(R.string.latte_title)
                 coffeeDesc?.text = getString(R.string.latte_desc)
             }
+            else -> {
+                // default / fallback
+                coffeeTitle?.text = ""
+                coffeeDesc?.text = ""
+            }
         }
     }
 
-
-    companion object {
-        private const val COFFEE_ID = "COFFEE_ID"
-        fun newInstance(coffeeId: Int) =
-            DetailFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(COFFEE_ID, coffeeId)
-                }
-            }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        coffeeTitle = null
+        coffeeDesc = null
     }
 }
