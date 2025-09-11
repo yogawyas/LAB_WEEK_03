@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.navigation.findNavController
 
 class DetailFragment : Fragment() {
 
@@ -31,12 +32,16 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // bind views
         coffeeTitle = view.findViewById(R.id.coffee_title)
         coffeeDesc = view.findViewById(R.id.coffee_desc)
 
         val coffeeId = arguments?.getInt(COFFEE_ID, 0) ?: 0
         setCoffeeData(coffeeId)
+
+        val backButton = view.findViewById<View>(R.id.back_button)
+        backButton.setOnClickListener {
+            view.findNavController().navigateUp()
+        }
     }
 
     private fun setCoffeeData(id: Int) {
@@ -53,8 +58,23 @@ class DetailFragment : Fragment() {
                 coffeeTitle?.text = getString(R.string.latte_title)
                 coffeeDesc?.text = getString(R.string.latte_desc)
             }
+            R.id.espresso -> {
+                coffeeTitle?.text = getString(R.string.espresso_title)
+                coffeeDesc?.text = getString(R.string.espresso_desc)
+            }
+            R.id.cappuccino -> {
+                coffeeTitle?.text = getString(R.string.cappuccino_title)
+                coffeeDesc?.text = getString(R.string.cappuccino_desc)
+            }
+            R.id.oatside -> {
+                coffeeTitle?.text = getString(R.string.oatside_title)
+                coffeeDesc?.text = getString(R.string.oatside_desc)
+            }
+            R.id.kenangan -> {
+                coffeeTitle?.text = getString(R.string.kenangan_title)
+                coffeeDesc?.text = getString(R.string.kenangan_desc)
+            }
             else -> {
-                // default / fallback
                 coffeeTitle?.text = ""
                 coffeeDesc?.text = ""
             }
